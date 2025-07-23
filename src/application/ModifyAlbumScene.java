@@ -7,11 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage; 
 
 public class ModifyAlbumScene 
 {
-    public static Scene createScene(Stage mainStage, Scene mainScene, int index, ArrayList<Album> albums)
+    public static Scene createScene(Main mainInstance, int index)
     {
         VBox layout = new VBox(10);
         Label mainLabel = new Label("Add Album");
@@ -34,29 +33,31 @@ public class ModifyAlbumScene
         Button saveButton = new Button("Save");
         Button exitButton = new Button("Exit");
         HBox bottomButtons = new HBox(10);
-        bottomButtons.getChildren().addAll(saveButton, exitButton); //Adds the buttons to the bottom of the scene
+        bottomButtons.getChildren().addAll(saveButton, exitButton);
 
         //-1 means new album, changes the save button to add a new album
-        if (index >= 0 && index < albums.size())
+        if (index >= 0 && index < mainInstance.albums.size())
         {
-            Album album = albums.get(index); //Sets the scene to be a modification of an existing album
-            mainLabel.setText("Edit Album"); //Reuses code from the add album scene
+            Album album = mainInstance.albums.get(index);
+            mainLabel.setText("Edit Album");
             albumYearField.setText(Integer.toString(album.getYear()));
             albumArtistField.setText(album.getArtist());
             albumGenreField.setText(album.getGenre());
             albumNameField.setText(album.getTitle());
         }
 
-        exitButton.setOnAction(e -> mainStage.setScene(mainScene)); //Exits the scene and goes back to the main scene
+        exitButton.setOnAction(e -> {
+            mainInstance.mainStage.setScene(mainInstance.mainScene);
+            mainInstance.fullRefresh();
+        });
 
-        
         saveButton.setOnAction(e ->
         {   
             try
             {
                 ArrayList<Song> songs = null;
-                if (index >= 0 && index < albums.size()) {
-                    songs = albums.get(index).getSongs();
+                if (index >= 0 && index < mainInstance.albums.size()) {
+                    songs = mainInstance.albums.get(index).getSongs();
                 } else {
                     songs = new ArrayList<Song>();
                 }
@@ -66,27 +67,24 @@ public class ModifyAlbumScene
                                            Integer.parseInt(albumYearField.getText()));
                 if (index == -1)
                 {
-                    albums.add(newAlbum);
+                    mainInstance.albums.add(newAlbum);
                 }
-                else if (index >= 0 && index < albums.size())
+                else if (index >= 0 && index < mainInstance.albums.size())
                 {
-                    albums.set(index, newAlbum); //Creates new album object and replaces the old one (why not just modify the old one?)
-                    albums.get(index).songs = songs; //Keeps the same song list as the old album object gets disposed of
+                    mainInstance.albums.set(index, newAlbum);
+                    mainInstance.albums.get(index).songs = songs;
                 }
-                Main.fullRefresh();
-                mainStage.setScene(mainScene);
-
+                mainInstance.mainStage.setScene(mainInstance.mainScene);
+                mainInstance.fullRefresh();
             }
             catch (NumberFormatException ex)
             {
-                System.out.println("Invalid year format"); //In case the user enters a non-integer value for the year
+                System.out.println("Invalid year format");
             }
-
         });
 
-
         layout.getChildren().addAll(mainLabel, 
-                                    nameLabel, albumNameField, //Adds all the labels and text fields to the layout
+                                    nameLabel, albumNameField,
                                     artistLabel, albumArtistField, 
                                     genreLabel, albumGenreField, 
                                     yearLabel, albumYearField,  

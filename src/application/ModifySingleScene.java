@@ -1,21 +1,18 @@
 package application;
 
-import java.util.ArrayList;
-
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class ModifySingleScene 
 {
-    public static Scene createScene(Stage mainStage, Scene mainScene, int index, ArrayList<Single> singles)
+    public static Scene createScene(Main mainInstance, int index)
     {
         VBox layout = new VBox(10);
-        Label mainLabel = new Label("Add Single"); //All text needed to guide user
+        Label mainLabel = new Label("Add Single");
         Label yearLabel = new Label("Enter single year");
         Label genreLabel = new Label("Enter single genre");
         Label artistLabel = new Label("Enter single artist");
@@ -35,8 +32,8 @@ public class ModifySingleScene
         Button saveButton = new Button("Save");
         Button exitButton = new Button("Exit");
         HBox bottomButtons = new HBox(10);
-        bottomButtons.getChildren().addAll(saveButton, exitButton); //Adds the buttons to the bottom of the scene
-        
+        bottomButtons.getChildren().addAll(saveButton, exitButton);
+
         layout.getChildren().addAll(mainLabel, 
                                     nameLabel, singleNameField,
                                     artistLabel, singleArtistField,
@@ -44,9 +41,10 @@ public class ModifySingleScene
                                     yearLabel, singleYearField, 
                                     durationLabel, singleDurationField, 
                                     bottomButtons);
+
         if (index != -1) 
         {
-            Single single = singles.get(index);
+            Single single = mainInstance.singles.get(index);
             mainLabel.setText("Edit Single");
             singleYearField.setText(Integer.toString(single.getYear()));
             singleGenreField.setText(single.getGenre());
@@ -55,38 +53,36 @@ public class ModifySingleScene
             singleDurationField.setText(Integer.toString(single.getLength()));
         }
 
-        exitButton.setOnAction(e -> mainStage.setScene(mainScene)); //Exits the scene and goes back to the main scene
-
+        exitButton.setOnAction(e -> {
+            mainInstance.mainStage.setScene(mainInstance.mainScene);
+            mainInstance.fullRefresh();
+        });
 
         saveButton.setOnAction(e -> 
         {
             try
             {
+                Single single = new Single(singleNameField.getText(), 
+                                           Integer.parseInt(singleDurationField.getText()), 
+                                           singleArtistField.getText(), 
+                                           Integer.parseInt(singleYearField.getText()), 
+                                           singleGenreField.getText());
+                if (index != -1) 
+                {
+                    mainInstance.singles.set(index, single);
+                } 
+                else 
+                {
+                    mainInstance.singles.add(single);
+                }
 
-            Single single = new Single(singleNameField.getText(), 
-                                       Integer.parseInt(singleDurationField.getText()), 
-                                       singleArtistField.getText(), 
-                                       Integer.parseInt(singleYearField.getText()), 
-                                       singleGenreField.getText());
-            if (index != -1) 
-            {
-                singles.set(index, single);
-            } 
-
-            else 
-            {
-                singles.add(single);
-            }
-
-            Main.fullRefresh();
-            mainStage.setScene(mainScene);
-
+                mainInstance.mainStage.setScene(mainInstance.mainScene);
+                mainInstance.fullRefresh();
             }
             catch (NumberFormatException ex)
             {
-                System.out.println("Duration and year must be numbers");  //Handles the case where the user enters a non-integer value for the year or duration
+                System.out.println("Duration and year must be numbers");
             }
-
         });
         return new Scene(layout, 400, 500);
     }
