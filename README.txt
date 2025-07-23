@@ -2,10 +2,10 @@ Hello My name is Simon
 
 
 How to run:
-    Install the java extension pack in vscode
-    Run the main java file.
-    Requires Java 8 441 as 451 removes javafx.
-    Eclipse should function also
+    Install the Java Extension Path in vscode
+    Download OpenJFX and place libraries into directory of your choosing
+    Update settings.json so the paths reference the JavaFX libs
+
 
 
 This project is a music library created for my Java class at my college. It consists of demonstration of learned topics needed for a java certificate
