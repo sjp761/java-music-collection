@@ -180,14 +180,11 @@ public class Main extends Application {
 			Main.cbAlbumList.getItems().add(Main.albums.get(i).getTitle());
 		}
         
-
- 
-        
-	Main.cbSingleList.getItems().clear();
-	for (int i = 0; i < Main.singles.size(); i++)
-	{
-		Main.cbSingleList.getItems().add(Main.singles.get(i).getTitle());
-	}
+		Main.cbSingleList.getItems().clear();
+		for (int i = 0; i < Main.singles.size(); i++)
+		{
+			Main.cbSingleList.getItems().add(Main.singles.get(i).getTitle());
+		}
 
 
     }
