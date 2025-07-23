@@ -107,8 +107,6 @@ public class Main extends Application {
 				
 			});
 
-			
-			
 			btnDeleteAlbum.setOnAction(e -> {
 				if (albumIndex != -1) //Makes sure an album is selected
 				{
@@ -136,6 +134,16 @@ public class Main extends Application {
 				primaryStage.setScene(ModifySingleScene.createScene(primaryStage, scene, singleIndex, singles));
 			});
 
+			btnDeleteSingle.setOnAction(e -> 
+			{
+				if (singleIndex != -1) //Makes sure a single is selected
+				{
+					singles.remove(singleIndex);
+					fullRefresh();
+					taChosenInfo.setText("");
+			}});
+
+
 			btnBST.setOnAction(e -> 
 			{
 				BinaryTree tree = new BinaryTree();
@@ -143,19 +151,12 @@ public class Main extends Application {
 				{
 					tree.insert(singles.get(i).getTitle());
 				}
-				taChosenInfo.setText("In Order: " + tree.inorder() + "\n" + 
-									 "Pre Order: "+ tree.preorder() + "\n" +
-									 "Post Order: "+ tree.postorder());
+				taChosenInfo.setText("In Order: " + "\n" + tree.inorder() + "\n" + 
+									 "Pre Order: " + "\n" + tree.preorder() + "\n" +
+									 "Post Order: " + "\n" + tree.postorder());
 			});
 
-			btnDeleteSingle.setOnAction(e -> {
-				if (singleIndex != -1) //Makes sure a single is selected
-				{
-					singles.remove(singleIndex);
-					fullRefresh();
-					taChosenInfo.setText("");
-				}});
-
+			
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -172,31 +173,22 @@ public class Main extends Application {
         Main.taChosenInfo.clear();
         Main.albumIndex = -1;         
         Main.singleIndex = -1;
-        if (Main.albums.size() == 0)
-        {
-            Main.cbAlbumList.getItems().clear();
-        }
-        else
-        {
-            Main.cbAlbumList.getItems().clear();
-            for (int i = 0; i < Main.albums.size(); i++)
-            {
-                Main.cbAlbumList.getItems().add(Main.albums.get(i).getTitle());
-            }
-        }
 
-        if (Main.singles.size() == 0)
-        {
-            Main.cbSingleList.getItems().clear();
-        }
-        else
-        {
-            Main.cbSingleList.getItems().clear();
-            for (int i = 0; i < Main.singles.size(); i++)
-            {
-                Main.cbSingleList.getItems().add(Main.singles.get(i).getTitle());
-            }
-        }
+		Main.cbAlbumList.getItems().clear();
+		for (int i = 0; i < Main.albums.size(); i++)
+		{
+			Main.cbAlbumList.getItems().add(Main.albums.get(i).getTitle());
+		}
+        
+
+ 
+        
+	Main.cbSingleList.getItems().clear();
+	for (int i = 0; i < Main.singles.size(); i++)
+	{
+		Main.cbSingleList.getItems().add(Main.singles.get(i).getTitle());
+	}
+
 
     }
 }
