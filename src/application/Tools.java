@@ -15,16 +15,16 @@ public class Tools
         try
         {
             BufferedWriter file = new BufferedWriter(new FileWriter("albums.csv")); //Clears albums.csv every time
-            for (int i = 0; i < albums.size(); i++)
+            for (Album album : albums)
             {
-                file.append(albums.get(i).getTitle() + ",");
-                file.append(albums.get(i).getArtist() + ",");
-                file.append(albums.get(i).getGenre() + ",");
-                file.append(String.valueOf(albums.get(i).getYear()));
+                file.append(album.getTitle() + ",");
+                file.append(album.getArtist() + ",");
+                file.append(album.getGenre() + ",");
+                file.append(String.valueOf(album.getYear()));
 
-                for (int j = 0; j < albums.get(i).getSongs().size(); j++)
+                for (Song song : album.getSongs())
                 {
-                    file.append("\n" + albums.get(i).getSongs().get(j).songWithCommas()); //Appends the song under the album
+                    file.append("\n" + song.songWithCommas()); //Appends the song under the album
                 } //Gets album from arraylist, then gets the songs arraylist from the album, the song itself, then appends the song to the file
                 file.append(System.lineSeparator()); //Song signature differentiates from album
             }
@@ -42,9 +42,9 @@ public class Tools
         try
         {
             BufferedWriter file = new BufferedWriter(new FileWriter("singles.csv")); //Clears single.csv every time
-            for (int i = 0; i < singles.size(); i++)
+            for (Single single : singles)
             {
-                file.append(singles.get(i).singleWithCommas());
+                file.append(single.singleWithCommas());
                 file.append(System.lineSeparator());
             }
             file.close();
@@ -113,7 +113,6 @@ public class Tools
                     int year = Integer.parseInt(parts[3]);
                     String genre = parts[4];
                     Single single = new Single(title, length, artist, year, genre);
-                    
                     singles.add(single);
                 } 
                 else 
